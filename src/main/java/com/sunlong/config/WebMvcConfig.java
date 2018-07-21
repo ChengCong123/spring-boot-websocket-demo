@@ -20,7 +20,12 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/ws01").setViewName("/ws01");
     }
 
-    //配置Spring支持的websocket的类，是必须的
+
+    /**
+     * 配置Spring支持的websocket的类，是必须的
+     *
+     * @return
+     */
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
