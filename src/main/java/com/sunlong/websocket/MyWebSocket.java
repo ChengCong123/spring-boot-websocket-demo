@@ -2,6 +2,7 @@ package com.sunlong.websocket;
 
 import com.sunlong.service.SendService;
 import com.sunlong.utils.SpringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.websocket.*;
@@ -11,8 +12,8 @@ import java.io.IOException;
 /**
  * spring-boot-websocket-demo
  *
- * @Author 孙龙
- * @Date 2017/12/4
+ * @author 孙龙
+ * @date 2017/12/4
  */
 @ServerEndpoint(value = "/websocket")
 @Controller
@@ -21,14 +22,14 @@ public class MyWebSocket {
     //静态变量，用来记录当前在线连接数。
     private static int onlineCount = 0;
     //注入Service只能使用这种方式
-    private SendService sendService = SpringUtil.getBean(SendService.class);
+    private SendService sendService;
 
     /**
      * 连接建立成功调用的方法
      */
     @OnOpen
     public void onOpen(Session session) {
-        addOnlineCount();           //在线数加1
+        addOnlineCount(); //在线数加1
         System.out.println("有新连接加入！ID是" + session.getId() + "    当前在线人数为" + getOnlineCount());
     }
 
@@ -37,8 +38,7 @@ public class MyWebSocket {
      */
     @OnClose
     public void onClose(Session session) {
-
-        subOnlineCount();           //在线数减1
+        subOnlineCount(); //在线数减1
         System.out.println("有一连接关闭！ID是：" + session.getId() + "   当前在线人数为" + getOnlineCount());
         try {
             session.close();
@@ -54,9 +54,8 @@ public class MyWebSocket {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         System.out.println("来自客户端的消息:" + message + "   ID是：" + session.getId());
-
+        sendService = SpringUtil.getBean(SendService.class);
         sendService.sendMessage(session, "服务器消息！");
-
     }
 
     /**
@@ -65,7 +64,6 @@ public class MyWebSocket {
     @OnError
     public void onError(Session session, Throwable error) {
         System.out.println("发生错误》》发生时间：" + System.currentTimeMillis() + "  ID是：" + session.getId());
-
         error.printStackTrace();
     }
 
@@ -80,7 +78,4 @@ public class MyWebSocket {
     public static synchronized void subOnlineCount() {
         MyWebSocket.onlineCount--;
     }
-
 }
-
-

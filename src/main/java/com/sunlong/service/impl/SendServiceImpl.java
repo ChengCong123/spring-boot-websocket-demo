@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * spring-boot-websocket-demo
  *
- * @Author 孙龙
- * @Date 2017/11/28
+ * @author 孙龙
+ * @date 2017/11/28
  */
 @Service
 public class SendServiceImpl implements SendService {
